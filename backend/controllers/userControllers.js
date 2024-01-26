@@ -41,4 +41,20 @@ const registerUser = asyncHandler(async(req , res) => {
     }
 });
 
-module.exports = { registerUser };
+const authenticateUser = asyncHandler( async(req , res) => {
+    const {email , password} = req.body;
+
+    const user = await User.findOne({email})
+
+    if(user && ( await user.matchPassword(password))){
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            profilePicture: user.profilePicture,
+            token: generateToken(user._id),
+        })
+    }
+})
+
+module.exports = { registerUser , authenticateUser };

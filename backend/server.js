@@ -14,8 +14,7 @@ app.get('/' , (req , res) => {
     res.send("<h1> Hello Backend <h1>");
 })
 
-app.use("/user" , userRoutes);
-app.use("/" , userRoutes);
+app.use("/api/user" , userRoutes);
 
 const PORT = process.env.PORT || 3000;
 

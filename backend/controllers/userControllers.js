@@ -57,4 +57,16 @@ const authenticateUser = asyncHandler( async(req , res) => {
     }
 })
 
-module.exports = { registerUser , authenticateUser };
+const searchUsers = asyncHandler( async (req, res) => {
+    const searchInput = req.query.search ? {
+        $or:[
+            {name : {$regex : req.query.search, $options: "i"} },
+            {email : {$regex : req.query.search, $options: "i"} },
+        ]
+    }:{};
+
+    const usersFound = await User.find(searchInput).findOne({_id : {$ne : req.user._id}});
+    res.send(usersFound);
+});
+
+module.exports = { registerUser , authenticateUser, searchUsers };

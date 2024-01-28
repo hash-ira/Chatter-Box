@@ -1,12 +1,37 @@
-import React from 'react'
+import React , {useEffect} from 'react'
 import { Grid, List, ListItem , Avatar } from '@mui/material';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { ChatState } from '../context/ChatContext';
+import toast, { Toaster } from 'react-hot-toast';
+import axios from 'axios';
 
 function ChatSideSection() {
-  const { user } = ChatState();
+  const { user , setChats , chats } = ChatState();
 
-  // console.log(user);
+  const fetchChats = async () => {
+    try{
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+
+      const { data } = await axios.get("/api/chat", config);
+      setChats(data);  
+    }catch(error){
+      toast.error("Error occured");
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchChats();
+    // eslint-disable-next-line
+  }, [0]);
+
+  console.log(chats);
+
   return (
     <>
      <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
@@ -30,34 +55,17 @@ function ChatSideSection() {
           
           {/* Sample List of Chats */}
           <List>
-            <ListItem button>
-            <div elevation={3} className='flex items-center'>
-              <Avatar alt="Remy Sharp" src="https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png" sx={{ width: 40, height: 40 }} />
-              <div className='flex flex-col ml-2'>
-                <p className='text-[#7095F2] font-medium text-md'>Anonymous</p>
-                <p className='text-slate-600 font-medium text-xs'>Anonymous</p>
-              </div>
-            </div>
-            </ListItem>
-            <ListItem button>
-            <div elevation={3} className='flex items-center'>
-              <Avatar alt="Remy Sharp" src="https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png" sx={{ width: 40, height: 40 }} />
-              <div className='flex flex-col ml-2'>
-                <p className='text-[#7095F2] font-medium text-md'>Anonymous</p>
-                <p className='text-slate-600 font-medium text-xs'>Anonymous</p>
-              </div>
-            </div>
-            </ListItem>
-            <ListItem button>
-            <div elevation={3} className='flex items-center'>
-              <Avatar alt="Remy Sharp" src="https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png" sx={{ width: 40, height: 40 }} />
-              <div className='flex flex-col ml-2'>
-                <p className='text-[#7095F2] font-medium text-md'>Anonymous</p>
-                <p className='text-slate-600 font-medium text-xs'>Anonymous</p>
-              </div>
-            </div>
-            </ListItem>
-            {/* Add more chat users as needed */}
+              {chats.map((item, index) => (
+                <ListItem key={index} button>
+                  <div elevation={3} className='flex items-center'>
+                    <Avatar alt="Remy Sharp" src={item?.users[1]?.profilePicture} sx={{ width: 40, height: 40 }} />
+                    <div className='flex flex-col ml-2'>
+                      <p className='text-[#7095F2] font-medium text-md'>{item?.users[1]?.name}</p>
+                      <p className='text-slate-600 font-medium text-xs'>here goes latest chat</p>
+                    </div>
+                  </div>
+                </ListItem>
+              ))}
           </List>
         </div>
       </Grid> 

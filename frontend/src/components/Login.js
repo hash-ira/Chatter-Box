@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper, Typography, TextField, Button, Avatar, Link } from '@mui/material';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { useNavigate } from "react-router-dom";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import axios from 'axios';
 
 function Login({toggleSignIn}) {
@@ -21,12 +21,13 @@ function Login({toggleSignIn}) {
       };
 
       const { data } = await axios.post(
-        "/login",
+        "/api/user/login",
         { email, password },
         config
       );
 
-      toast.success("Login Successful")
+      toast.success("Login Successful");
+      localStorage.setItem("userInfo", JSON.stringify(data));
       navigate("/chat");
     } catch (error) {
       toast('Error Occured. Its Not You, Its Us!', {

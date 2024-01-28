@@ -1,4 +1,4 @@
-import React , {useEffect , useState} from 'react';
+import React from 'react';
 import { Grid} from '@mui/material';
 import ChatSection from '../components/ChatSection';
 import ChatSideSection from '../components/ChatSideSection';
@@ -14,6 +14,8 @@ function ChatPage() {
     // useEffect(()=>{
     //     fetchChats();
     // } , []);
+
+    
 
 
     return (

@@ -11,6 +11,7 @@ function SignUp({toggleSignIn}) {
   const [email , setEmail] = React.useState("");
   const [password , setPassword] = React.useState("");
   const [confirmPassword , setConfirmPassword] = React.useState("");
+  const [profilePicture , setProfilePicture] = React.useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -28,21 +29,21 @@ function SignUp({toggleSignIn}) {
         },
       };
       const { data } = await axios.post(
-        "http://localhost:3000/user",
+        "/api/user",
         {
           name : userName,
-          profilePicture : "tempFile",
           email,
           password,
+          profilePicture,
         },
         config
       );
 
       console.log(data);
 
-      toast.success('Registration Successful!')
-      // localStorage.setItem("userInfo", JSON.stringify(data));
-      // setPicLoading(false);
+      toast.success('Registration Successful!');
+
+      localStorage.setItem("userInfo", JSON.stringify(data));
       navigate('/chat');
 
     } catch (error) {
@@ -54,10 +55,32 @@ function SignUp({toggleSignIn}) {
     return;
   }
 
+  const postProfilePicture = (pic) => {
+    if (pic === undefined) {
+      toast.error("Please Select an Image!")
+      return;
+    }
+    console.log(pic);
+    if (pic.type === "image/jpeg" || pic.type === "image/png") {
+      const data = new FormData();
+      data.append("file", pic);
+      data.append("upload_preset", "ChatterBox");
+      data.append("cloud_name", "kingsman2702");
+      axios.post("https://api.cloudinary.com/v1_1/kingsman2702/image/upload", data)
+        .then((response) => {
+          console.log("Cloudinary response:", response);
+          setProfilePicture(response.data.url.toString());
+        })
+        .catch((error) => {
+          console.log("Cloudinary error:", error);
+        });
+    }
+  }
+
   return (
       <Grid container direction="row" justifyContent="center" alignItems="center">
         <div><Toaster/></div>
-        <Paper elevation={4} className="w-full max-w-xs h-[70vh] p-4 w-72 m-5 rounder-lg">
+        <Paper elevation={4} className="w-full max-w-xs h-[75vh] p-4 w-72 m-5 rounder-lg pb-9">
           <Grid align="center" className="mb-4">
             <Avatar style = {{backgroundColor : '#3F51B5' , marginBottom: "10px"}} alignItems="center">
               <LockTwoToneIcon />
@@ -91,6 +114,14 @@ function SignUp({toggleSignIn}) {
                 <TextField type="password" label="Confirm Password" variant="outlined" fullWidth required 
                   value = {confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}/>
+              </Grid>
+
+              <Grid item xs={12}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => postProfilePicture(e.target.files[0])}
+                  />
               </Grid>
 
               <Grid item xs={12}>

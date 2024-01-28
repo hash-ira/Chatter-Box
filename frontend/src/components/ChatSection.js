@@ -1,5 +1,5 @@
 import React from 'react'
-import { Grid, Typography, Divider, TextField, IconButton , Avatar } from '@mui/material';
+import { Grid, Divider, TextField, IconButton , Avatar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 function ChatSection() {
   return (
@@ -8,7 +8,7 @@ function ChatSection() {
         
         <Grid container className="px-3 py-2 items-center">
             <div className = 'flex mt-3 pl-3'> 
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                <Avatar alt="Remy Sharp" src="https://thehackernews.com/images/-hHcsvuiPrqU/VAWCN-PE8fI/AAAAAAAAfpE/UaALLkczoWU/s728/Celebrity-Nude-Photo-hacked.jpg" />
                 <h3 className='pl-2 items-left mb-0'>
                     Chat with User 1
                 </h3>

@@ -1,14 +1,18 @@
 import React from 'react'
 import { Grid, List, ListItem , Avatar } from '@mui/material';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import { ChatState } from '../context/ChatContext';
 
 function ChatSideSection() {
+  const { user } = ChatState();
+
+  // console.log(user);
   return (
     <>
      <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
         <div elevation={3} className='flex my-6 px-4 items-center space-x-2 ml-1'>
-          <Avatar alt="Remy Sharp" src="https://www.himalmag.com/wp-content/uploads/2019/07/sample-profile-picture.png" sx={{ width: 64, height: 64 }} />
-          <h2 className='text-[#7095F2] font-medium text-lg'>Anonymous</h2>
+          <Avatar alt="Remy Sharp" src={user?.profilePicture} sx={{ width: 64, height: 64 }} />
+          <h2 className='text-[#7095F2] font-medium text-lg'>{user?.name}</h2>
         </div>
 
         <form className="flex items-center bg-white w-5/6 mx-auto rounded-full px-4 py-0.5 h-9">

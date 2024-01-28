@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 import SignUp from '../components/SignUp';
 import Login from '../components/Login';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function HomePage() {
   const [signIn , setSignIn] = React.useState(true);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      if(userInfo){
+          navigate('/chat');
+        }
+  } , [navigate]);
   
 
   const toggleSignIn = () => {

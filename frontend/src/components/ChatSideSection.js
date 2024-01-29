@@ -8,11 +8,12 @@ import MyChats from './MyChats';
 import SearchedChats from './SearchedChats';
 
 function ChatSideSection({fetchAgain}) {
-  const { user , setChats , chats } = ChatState();
+  const { user , setChats , chats , selectedChat } = ChatState();
   const [searchValue , setSeachValue] = React.useState("");
   const [searchResults , setSeachResults] = React.useState([]);
-  
- 
+
+
+  console.log("SelectedChat" , selectedChat);
   const fetchChats = async () => {
     if(!user) return;
     try{
@@ -21,7 +22,7 @@ function ChatSideSection({fetchAgain}) {
           Authorization: `Bearer ${user?.token}`,
         },
       };
-      console.log(user);
+      // console.log(user);
 
       const { data } = await axios.get("/api/chat", config);
       setChats(data);  
@@ -41,7 +42,7 @@ function ChatSideSection({fetchAgain}) {
 
       const { data } = await axios.get(`/api/user?search=${searchValue}`, config);
       setSeachResults(data);
-      console.log(data);  
+      // console.log(data);  
     }catch(error){
       toast.error("Error occured");
       // console.log(error);
@@ -49,9 +50,7 @@ function ChatSideSection({fetchAgain}) {
   }
 
   const handleSearch = (event)=>{
-    console.log(event);
     if(event.code === "Enter"  || event.code === "NumpadEnter"){
-        console.log("Enter key was pressed. Run your function.");
         event.preventDefault();
         getUser(searchValue);
       }
@@ -63,7 +62,7 @@ function ChatSideSection({fetchAgain}) {
   }, [user]);
 
   
-  console.log(chats);
+  // console.log(chats);
   return (
     <>
      <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
@@ -88,8 +87,8 @@ function ChatSideSection({fetchAgain}) {
 
         <div>
           
-        {/* <MyChats chats={chats}/> */}
-        <SearchedChats chats = {searchResults}/>
+        <MyChats chats={chats}/>
+        {/* <SearchedChats chats = {searchResults}/> */}
         
 
         </div>

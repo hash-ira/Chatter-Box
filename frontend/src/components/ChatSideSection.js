@@ -11,7 +11,7 @@ function ChatSideSection({fetchAgain}) {
   const { user , setChats , chats } = ChatState();
   const [searchValue , setSeachValue] = React.useState("");
   const [searchResults , setSeachResults] = React.useState([]);
-
+  
  
   const fetchChats = async () => {
     if(!user) return;

@@ -5,6 +5,7 @@ const app = express();
 const connectDB = require('./config/mongoDB.js');
 const userRoutes = require("./routes/userRoutes.js");
 const chatRoutes = require("./routes/chatRoutes.js");
+const messageRoutes = require("./routes/messageRoutes.js");
 
 dotenv.config({path:__dirname+'/../.env'});
 connectDB();
@@ -17,6 +18,7 @@ app.get('/' , (req , res) => {
 
 app.use("/api/user" , userRoutes);
 app.use("/api/chat" , chatRoutes);
+app.use("/api/message" , messageRoutes);
 
 const PORT = process.env.PORT || 3000;
 

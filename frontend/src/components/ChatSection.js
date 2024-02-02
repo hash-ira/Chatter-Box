@@ -4,12 +4,17 @@ import SendIcon from '@mui/icons-material/Send';
 import { ChatState } from '../context/ChatContext';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { io } from "socket.io-client";
+
+const END_POINT = "http://localhost:4000";
+var socket , selectedChatCompare;
 
 function ChatSection() {
 
   const {user , selectedChat , chatUser} = ChatState();
   const [messages , setMessages] = React.useState([]);
   const [newMessage , setNewMessage] = React.useState("");
+  const [ socketConnected ,setSocketConnected] = React.useState(false);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -27,6 +32,8 @@ function ChatSection() {
       );
       console.log("data" , data);
       setMessages(data);
+
+      socket.emit("joinChat" , selectedChat);
 
     } catch (error) {
       console.log(error);
@@ -52,6 +59,8 @@ function ChatSection() {
           },
           config
         );
+
+        socket.emit("newMessage", data);
         setMessages([...messages, data]);
       } catch (error) {
         toast.error("Error ocurred!");
@@ -61,10 +70,29 @@ function ChatSection() {
 
   // console.log();
 
+  useEffect(()=>{
+    socket = io(END_POINT);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+  }, [user]);
+
   useEffect(() => {
     fetchMessages();
+    selectedChatCompare = selectedChat;
     // eslint-disable-next-line
   } , [selectedChat]);
+
+  useEffect(() => {
+    socket.on("messageReceived", (newMessageReceived) => {
+      console.log("Received new message:", newMessageReceived);
+      setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
+    });
+  
+    return () => {
+      socket.off("messageReceived");
+    };
+  }, [socket]);
+  
 
   console.log("messages" , messages);
 

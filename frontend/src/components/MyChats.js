@@ -5,6 +5,7 @@ import { ChatState } from '../context/ChatContext';
 function MyChats({chats}) {
   
   const {setSelectedChat , user , setChatUser} = ChatState();
+  console.log(chats);
   const handleSelectedChat = (item) => {
     setSelectedChat(item._id);
     if(user?._id === item?.users[0]._id){

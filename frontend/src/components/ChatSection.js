@@ -19,6 +19,7 @@ function ChatSection() {
 
   // eslint-disable-next-line
   const [ socketConnected ,setSocketConnected] = React.useState(false);
+  console.log(chatUser?._id);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -44,6 +45,29 @@ function ChatSection() {
     }
   };
 
+  const addUserToMyChats = async () => {
+    const id = await chatUser._id;
+    try {
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      
+      const { data } = await axios.post(
+        "/api/chat",
+        {
+          userId: id,
+        },
+        config
+      );
+    } catch (error) {
+      console.log("error courred");
+      toast.error("Error ocurred!");
+    }
+  }
+
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
       
@@ -65,14 +89,17 @@ function ChatSection() {
         );
 
         socket.emit("newMessage", data);
+        // console.log("length" ,messages.length);
+        if(messages.length === 0){
+          // console.log("chatUser._id",chatUser._id);
+          await addUserToMyChats();
+        }
         setMessages([...messages, data]);
       } catch (error) {
         toast.error("Error ocurred!");
       }
     }
   };
-
-  // console.log();
 
   useEffect(()=>{
     socket = io(END_POINT);

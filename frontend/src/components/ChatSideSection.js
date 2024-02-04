@@ -5,12 +5,16 @@ import { ChatState } from '../context/ChatContext';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import MyChats from './MyChats';
-// import SearchedChats from './SearchedChats';
+import HomeIcon from '@mui/icons-material/Home';
+import { IconButton } from '@mui/material';
+import SearchedChats from './SearchedChats';
 
 function ChatSideSection({ fetchAgain }) {
   const { user, setChats, chats, selectedChat } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
+  const [home , setHome] = React.useState(true);
+
 
   const fetchChats = async () => {
     if (!user) return;
@@ -47,12 +51,13 @@ function ChatSideSection({ fetchAgain }) {
     if (event.code === "Enter" || event.code === "NumpadEnter") {
       event.preventDefault();
       getUser(searchValue);
+      setHome(false);
     }
   };
 
   useEffect(() => {
     fetchChats();
-  }, [user]);
+  }, [user , home]);
 
   return (
     <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
@@ -61,22 +66,29 @@ function ChatSideSection({ fetchAgain }) {
         <h2 className='text-[#7095F2] font-medium text-lg'>{user?.name}</h2>
       </div>
 
-      <form className="flex items-center bg-white w-5/6 mx-auto rounded-full px-4 py-0.5 h-9">
-        <div className="mr-2">
-          <PersonSearchIcon className="text-gray-400" />
-        </div>
-        <input
-          className="flex-1 bg-transparent focus:outline-none text-gray-500"
-          placeholder="Search Friends"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={handleSearch}
-        />
-      </form>
+      <div className="flex justify-center">
+        <form className="flex items-center bg-white w-5/6 mx-auto rounded-full px-4 py-0.5 h-9">
+          <div className="mr-2">
+            <PersonSearchIcon className="text-gray-400" />
+          </div>
+          <input
+            className="flex-1 bg-transparent focus:outline-none text-gray-500"
+            placeholder="Search Friends"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+        </form>
+          <IconButton onClick={() => setHome(true)}>
+            <HomeIcon  className={`text-gray-${home ? "200" : "700"}`}/>
+          </IconButton>
+      </div>
+
+      { home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Home</p>}
+      { !home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
 
       <div>
-        <MyChats chats={chats} />
-        {/* <SearchedChats chats = {searchResults}/> */}
+        {home ? <MyChats chats={chats} /> : <SearchedChats chats = {searchResults}/>}
       </div>
     </Grid>
   );

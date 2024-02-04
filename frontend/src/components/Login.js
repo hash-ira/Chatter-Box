@@ -37,6 +37,12 @@ function Login({toggleSignIn}) {
     }
   };
 
+  const handleGuestUser = (e) =>{
+    e.preventDefault();
+    setEmail("guest@chatter.com");
+    setPassword("guest123");
+  }
+
   return (
       <Grid container direction="row" justifyContent="center" alignItems="center">
         <Paper elevation={4} className="pb-10 p-4 w-72 m-5 rounder-lg">
@@ -70,9 +76,15 @@ function Login({toggleSignIn}) {
               </Grid>
 
               <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="error" fullWidth onClick={handleGuestUser}>
+                  Get Guest User Credentials
+                </Button>
+              </Grid>
+
+              <Grid item xs={12}>
                 <Typography>
                   Don't have an account? 
-                  <Link onClick={toggleSignIn}>
+                  <Link component="button" onClick={toggleSignIn}>
                     Sign Up
                   </Link>
                 </Typography>

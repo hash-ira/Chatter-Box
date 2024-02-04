@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import { io } from "socket.io-client";
 
 const END_POINT = "http://localhost:4000";
+
+// eslint-disable-next-line
 var socket , selectedChatCompare;
 
 function ChatSection() {
@@ -14,6 +16,8 @@ function ChatSection() {
   const {user , selectedChat , chatUser} = ChatState();
   const [messages , setMessages] = React.useState([]);
   const [newMessage , setNewMessage] = React.useState("");
+
+  // eslint-disable-next-line
   const [ socketConnected ,setSocketConnected] = React.useState(false);
 
   const fetchMessages = async () => {
@@ -42,7 +46,7 @@ function ChatSection() {
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
-
+      
       try {
         const config = {
           headers: {
@@ -91,6 +95,7 @@ function ChatSection() {
     return () => {
       socket.off("messageReceived");
     };
+    // eslint-disable-next-line
   }, [socket]);
   
 

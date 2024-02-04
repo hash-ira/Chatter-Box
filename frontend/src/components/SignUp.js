@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Paper, Typography, TextField, Button, Avatar , Link } from '@mui/material';
 import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import toast, { Toaster } from 'react-hot-toast';
@@ -13,6 +13,22 @@ function SignUp({toggleSignIn}) {
   const [confirmPassword , setConfirmPassword] = React.useState("");
   const [profilePicture , setProfilePicture] = React.useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const hasShownToast = sessionStorage.getItem("hasShownToast");
+    if (!hasShownToast) {
+      toast(
+        "Headout to login page to get guest user credentials",
+        {
+          duration: 5000,
+          icon: '💡',
+        }
+      );
+      sessionStorage.setItem("hasShownToast", "true");
+    }
+  }, []);
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();

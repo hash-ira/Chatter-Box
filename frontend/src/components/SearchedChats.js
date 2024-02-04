@@ -2,7 +2,7 @@ import React from 'react';
 import { List, ListItem , Avatar } from '@mui/material';
 import { ChatState } from '../context/ChatContext';
 
-function SearchedChats({chats }) {
+function SearchedChats({chats}) {
     const {setSelectedChat , setChatUser} = ChatState();
 
     const handleSelectedChat = (item) => {
@@ -18,7 +18,7 @@ function SearchedChats({chats }) {
                     <Avatar alt="Remy Sharp" src={item?.profilePicture} sx={{ width: 40, height: 40 }} />
                     <div className='flex flex-col ml-2'>
                       <p className='text-[#7095F2] font-medium text-md'>{item?.name}</p>
-                      <p className='text-slate-600 font-medium text-xs'>here goes latest chat</p>
+                      {/* <p className='text-slate-600 font-medium text-xs'>here goes latest chat</p> */}
                     </div>
                   </div>
                 </ListItem>

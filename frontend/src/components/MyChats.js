@@ -15,6 +15,8 @@ function MyChats({chats}) {
     }
   }
 
+  console.log(chats);
+
   return (
     <>
       <List>
@@ -25,7 +27,7 @@ function MyChats({chats}) {
                             sx={{ width: 40, height: 40 }} />
                     <div className='flex flex-col ml-2'>
                       <p className='text-[#7095F2] font-medium text-md'>{ (user._id === item?.users[0]._id) ? item?.users[1]?.name : item?.users[0]?.name }</p>
-                      <p className='text-slate-600 font-medium text-xs'>here goes latest chat</p>
+                      <p className='text-slate-600 font-medium text-xs'>{ item?.latestMessage?.sender?._id !== user._id ? `${item?.latestMessage?.sender}: ${item?.latestMessage?.content}` : item?.latestMessage?.content } </p>
                     </div>
                   </div>
                 </ListItem>

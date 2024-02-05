@@ -55,8 +55,6 @@ function SignUp({toggleSignIn}) {
         config
       );
 
-      console.log(data);
-
       toast.success('Registration Successful!');
 
       localStorage.setItem("userInfo", JSON.stringify(data));
@@ -76,7 +74,7 @@ function SignUp({toggleSignIn}) {
       toast.error("Please Select an Image!")
       return;
     }
-    console.log(pic);
+
     if (pic.type === "image/jpeg" || pic.type === "image/png") {
       const data = new FormData();
       data.append("file", pic);
@@ -84,7 +82,6 @@ function SignUp({toggleSignIn}) {
       data.append("cloud_name", "kingsman2702");
       axios.post("https://api.cloudinary.com/v1_1/kingsman2702/image/upload", data)
         .then((response) => {
-          console.log("Cloudinary response:", response);
           setProfilePicture(response.data.url.toString());
         })
         .catch((error) => {

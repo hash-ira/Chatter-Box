@@ -19,11 +19,9 @@ function ChatSection() {
 
   // eslint-disable-next-line
   const [ socketConnected ,setSocketConnected] = React.useState(false);
-  console.log(chatUser?._id);
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
-    console.log("hyena" , selectedChat);
     try {
       const config = {
         headers: {
@@ -35,7 +33,6 @@ function ChatSection() {
         `/api/message/${selectedChat}`,
         config
       );
-      console.log("data" , data);
       setMessages(data);
 
       socket.emit("joinChat" , selectedChat);
@@ -55,7 +52,7 @@ function ChatSection() {
         },
       };
       
-      const { data } = await axios.post(
+      await axios.post(
         "/api/chat",
         {
           userId: id,
@@ -69,7 +66,7 @@ function ChatSection() {
   }
 
   const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
+    if (newMessage) {
       
       try {
         const config = {
@@ -94,7 +91,7 @@ function ChatSection() {
           // console.log("chatUser._id",chatUser._id);
           await addUserToMyChats();
         }
-        setMessages([...messages, data]);
+        setMessages(prevMessages => [...prevMessages, data]);
       } catch (error) {
         toast.error("Error ocurred!");
       }
@@ -115,7 +112,6 @@ function ChatSection() {
 
   useEffect(() => {
     socket.on("messageReceived", (newMessageReceived) => {
-      console.log("Received new message:", newMessageReceived);
       setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
     });
   
@@ -124,9 +120,6 @@ function ChatSection() {
     };
     // eslint-disable-next-line
   }, [socket]);
-  
-
-  console.log("messages" , messages);
 
   return (
     <>
@@ -168,10 +161,11 @@ function ChatSection() {
         {/* Message Input */}
         <div className='mt-auto'>
             <Grid container>
-            <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={sendMessage}/>
-            <IconButton color="primary" size="large">
+            <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e);}}}/>
+            <IconButton color="primary" size="large" onClick={sendMessage}>
                 <SendIcon />
             </IconButton>
+
             </Grid>
         </div>
       </Grid>

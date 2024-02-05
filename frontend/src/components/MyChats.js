@@ -2,10 +2,10 @@ import React from 'react'
 import { List, ListItem , Avatar } from '@mui/material';
 import { ChatState } from '../context/ChatContext';
 
-function MyChats({chats}) {
+function MyChats() {
   
-  const {setSelectedChat , user , setChatUser} = ChatState();
-  console.log(chats);
+  const {setSelectedChat , user , setChatUser , chats} = ChatState();
+
   const handleSelectedChat = (item) => {
     setSelectedChat(item._id);
     if(user?._id === item?.users[0]._id){
@@ -14,8 +14,6 @@ function MyChats({chats}) {
       setChatUser(item?.users[0]);
     }
   }
-
-  console.log(chats);
 
   return (
     <>

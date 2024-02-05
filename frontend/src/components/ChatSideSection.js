@@ -10,7 +10,7 @@ import { IconButton } from '@mui/material';
 import SearchedChats from './SearchedChats';
 
 function ChatSideSection({ fetchAgain }) {
-  const { user, setChats, chats, selectedChat } = ChatState();
+  const { user, setChats, chats } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
   const [home , setHome] = React.useState(true);
@@ -57,7 +57,8 @@ function ChatSideSection({ fetchAgain }) {
 
   useEffect(() => {
     fetchChats();
-  }, [user , home]);
+    // eslint-disable-next-line
+  }, [user , home, chats]);
 
   return (
     <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
@@ -88,7 +89,7 @@ function ChatSideSection({ fetchAgain }) {
       { !home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
 
       <div>
-        {home ? <MyChats chats={chats} /> : <SearchedChats chats = {searchResults}/>}
+        {home ? <MyChats/> : <SearchedChats chats = {searchResults}/>}
       </div>
     </Grid>
   );

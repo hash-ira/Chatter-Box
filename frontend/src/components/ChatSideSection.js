@@ -89,7 +89,7 @@ function ChatSideSection({ fetchAgain }) {
       { !home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
 
       <div>
-        {home ? <MyChats/> : <SearchedChats chats = {searchResults}/>}
+        {home ? <MyChats/> : <SearchedChats searchResults = {searchResults}/>}
       </div>
     </Grid>
   );

@@ -7,18 +7,24 @@ function MyChats() {
   const {setSelectedChat , user , setChatUser , chats} = ChatState();
 
   const handleSelectedChat = (item) => {
+
     setSelectedChat(item._id);
     if(user?._id === item?.users[0]._id){
       setChatUser(item?.users[1]);
-    }else{
+    } else {
       setChatUser(item?.users[0]);
     }
   }
 
+  console.log(chats);
+
+  //deals with not displaying chats unnless a message is received.
+  const filteredChats = chats.filter(chat => chat.latestMessage);
+
   return (
     <>
       <List>
-              {chats?.map((item, index) => (
+              {filteredChats?.map((item, index) => (
                 <ListItem key={index} button onClick={() => {handleSelectedChat(item)}}>
                   <div elevation={3} className='flex items-center'>
                     <Avatar alt="Remy Sharp" src={ (user._id === item?.users[0]._id) ? item?.users[1]?.profilePicture : item?.users[0]?.profilePicture  }
@@ -35,4 +41,4 @@ function MyChats() {
   )
 }
 
-export default MyChats
+export default MyChats;

@@ -10,7 +10,7 @@ function HomePage() {
   const navigate = useNavigate();
 
   useEffect(()=>{
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
       if(userInfo){
           navigate('/chat');
         }
@@ -22,7 +22,7 @@ function HomePage() {
   };
 
   return (
-    <div className="h-[100vh] flex">
+    <div className="h-[100vh] flex bg-[#F8F9F8]">
       { signIn ? <SignUp toggleSignIn = {toggleSignIn} /> : <Login toggleSignIn = {toggleSignIn}/> }
     </div>
   );

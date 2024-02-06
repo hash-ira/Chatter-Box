@@ -54,7 +54,10 @@ const authenticateUser = asyncHandler( async(req , res) => {
             profilePicture: user.profilePicture,
             token: generateToken(user._id),
         })
-    }
+    } else {
+        res.status(401);
+        throw new Error("Invalid Email or Password");
+      }
 })
 
 const searchUsers = asyncHandler( async (req, res) => {

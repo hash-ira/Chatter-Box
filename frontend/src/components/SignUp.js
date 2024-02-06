@@ -57,7 +57,7 @@ function SignUp({toggleSignIn}) {
 
       toast.success('Registration Successful!');
 
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      sessionStorage.setItem("userInfo", JSON.stringify(data));
       navigate('/chat');
 
     } catch (error) {
@@ -144,7 +144,7 @@ function SignUp({toggleSignIn}) {
               </Grid>
               <Grid item xs={12}>
                 <Typography>
-                    Already have an account? 
+                    Already have an account?{' '}
                   <Link onClick={toggleSignIn} >
                     Log In
                   </Link>

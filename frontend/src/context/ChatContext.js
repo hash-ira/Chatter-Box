@@ -11,7 +11,7 @@ const ChatProvider = ({children}) => {
     const navigate = useNavigate();
 
     useEffect(()=>{
-        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
         setUser(userInfo);
 
         if (!userInfo) navigate('/');

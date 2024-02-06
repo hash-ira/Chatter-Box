@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Paper, Typography, TextField, Button, Avatar, Link } from '@mui/material';
 import LockOpenTwoToneIcon from '@mui/icons-material/LockOpenTwoTone';
 import { useNavigate } from "react-router-dom";
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 
 function Login({toggleSignIn}) {
@@ -12,6 +12,17 @@ function Login({toggleSignIn}) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    if (!password) {
+      toast.error("Please enter a password.");
+      return;
+    }
 
     try {
       const config = {
@@ -27,13 +38,15 @@ function Login({toggleSignIn}) {
       );
 
       toast.success("Login Successful");
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      sessionStorage.setItem("userInfo", JSON.stringify(data));
       navigate("/chat");
     } catch (error) {
-      toast('Error Occured. Its Not You, Its Us!', {
-        icon: '🥹',
-      });
-      console.log(error)
+      if (error.response && error.response.status === 401) {
+        toast.error('Invalid email or password. Please try again.');
+      } else {
+        toast.error('An error occurred. Please try again later.');
+        console.log(error);
+      }
     }
   };
 
@@ -44,7 +57,9 @@ function Login({toggleSignIn}) {
   }
 
   return (
-      <Grid container direction="row" justifyContent="center" alignItems="center">
+    <>
+      <div><Toaster/></div>
+    <Grid container direction="row" justifyContent="center" alignItems="center">
         <Paper elevation={4} className="pb-10 p-4 w-72 m-5 rounder-lg">
           <Grid align="center" className="mb-4">
             <Avatar style={{ backgroundColor: '#3F51B5', marginBottom: '10px' }}>
@@ -83,7 +98,7 @@ function Login({toggleSignIn}) {
 
               <Grid item xs={12}>
                 <Typography>
-                  Don't have an account? 
+                  Don't have an account?{' '}
                   <Link component="button" onClick={toggleSignIn}>
                     Sign Up
                   </Link>
@@ -93,7 +108,8 @@ function Login({toggleSignIn}) {
             </Grid>
           </form>
         </Paper>
-      </Grid>
+    </Grid>
+    </>
   );
 }
 

@@ -33,6 +33,17 @@ function SignUp({toggleSignIn}) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!email || !password || !confirmPassword || !userName) {
+      toast.error("Please input all the fields.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     if (password !== confirmPassword) {
       toast.error("Passwords Do Not Match")
       return;
@@ -83,6 +94,7 @@ function SignUp({toggleSignIn}) {
       axios.post("https://api.cloudinary.com/v1_1/kingsman2702/image/upload", data)
         .then((response) => {
           setProfilePicture(response.data.url.toString());
+          console.log(response.data.url.toString());
         })
         .catch((error) => {
           console.log("Cloudinary error:", error);

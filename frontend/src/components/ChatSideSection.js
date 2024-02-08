@@ -12,7 +12,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 
 function ChatSideSection({ fetchAgain }) {
-  const { user, setChats, chats } = ChatState();
+  const { user, setChats, chats, setChatUser } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
   const [home, setHome] = React.useState(true);
@@ -74,7 +74,9 @@ function ChatSideSection({ fetchAgain }) {
   
       await axios.delete("/api/chat/", config);
       fetchChats();
+      setChatUser({});
       setHome(true);
+      
     } catch (error) {
       toast.error("Error occurred while deleting chats");
     }

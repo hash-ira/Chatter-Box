@@ -4,7 +4,7 @@ import { ChatState } from "../context/ChatContext";
 import axios from "axios";
 
 function SearchedChats({ searchResults }) {
-  const { setSelectedChat, setChatUser, chats, user } = ChatState();
+  const { setSelectedChat, setChatUser, chats, user,  messageSent } = ChatState();
   
   const findChatByUsers = (chats, user1Id, user2Id) => {
     for (let chat of chats) {
@@ -51,6 +51,7 @@ function SearchedChats({ searchResults }) {
     setSelectedChat(chatId);
     setChatUser(item);
   };
+
   return (
     <>
       <List>

@@ -6,15 +6,23 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import MyChats from './MyChats';
 import HomeIcon from '@mui/icons-material/Home';
-import { IconButton } from '@mui/material';
+import { IconButton, Button } from '@mui/material';
 import SearchedChats from './SearchedChats';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
 function ChatSideSection({ fetchAgain }) {
   const { user, setChats, chats } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
-  const [home , setHome] = React.useState(true);
+  const [home, setHome] = React.useState(true);
+  const navigate = useNavigate();
 
+  const logoutHandler = () => {
+    sessionStorage.removeItem("userInfo");
+    navigate('/');
+  }
+ 
 
   const fetchChats = async () => {
     if (!user) return;
@@ -26,6 +34,7 @@ function ChatSideSection({ fetchAgain }) {
       };
 
       const { data } = await axios.get("/api/chat", config);
+      console.log(data);
       setChats(data);
     } catch (error) {
       toast.error("Error occurred");
@@ -62,9 +71,17 @@ function ChatSideSection({ fetchAgain }) {
 
   return (
     <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
-      <div elevation={3} className='flex my-6 px-4 items-center space-x-2 ml-1'>
-        <Avatar alt="Remy Sharp" src={user?.profilePicture} sx={{ width: 64, height: 64 }} />
-        <h2 className='text-[#7095F2] font-medium text-lg'>{user?.name}</h2>
+      <div elevation={3} className='flex flex-row my-6 px-4 justify-between items-center ml-1'>
+        <div className='flex flex-row items-center justify-around'>
+          <Avatar alt="Remy Sharp" src={user?.profilePicture} sx={{ width: 64, height: 64 }} />
+          <h2 className='text-[#7095F2] font-semibold text-lg ml-2'>{user?.name}</h2>
+        </div>
+
+        <div>
+          <Button variant="contained" endIcon={<LogoutIcon />} size="small" onClick={logoutHandler} style={{ backgroundColor: '#6788db', color: '#FFFFFF' }}>
+            Logout
+          </Button>
+        </div>
       </div>
 
       <div className="flex justify-center">

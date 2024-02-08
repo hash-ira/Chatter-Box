@@ -13,7 +13,7 @@ var socket , selectedChatCompare;
 
 function ChatSection() {
 
-  const {user , selectedChat , chatUser} = ChatState();
+  const {user , selectedChat , chatUser , setMessageSent} = ChatState();
   const [messages , setMessages] = React.useState([]);
   const [newMessage , setNewMessage] = React.useState("");
 
@@ -86,11 +86,10 @@ function ChatSection() {
         );
 
         socket.emit("newMessage", data);
-        // console.log("length" ,messages.length);
         if(messages.length === 0){
-          // console.log("chatUser._id",chatUser._id);
           await addUserToMyChats();
         }
+        setMessageSent(true);
         setMessages(prevMessages => [...prevMessages, data]);
       } catch (error) {
         toast.error("Error ocurred!");
@@ -128,8 +127,8 @@ function ChatSection() {
         <Grid container className="px-3 py-2">
             <div className = 'flex mt-3 pl-3 items-center'> 
                 <Avatar alt="Remy Sharp" src={chatUser.profilePicture} sx={{ width: 48, height: 48 }}/>
-                <h3 className='pl-2 items-left mb-0 text-lg font-bold'>
-                    {chatUser.name}
+                <h3 className='pl-2 items-left mb-0 text-lg font-bold text-[#7095F2]'>
+                    {chatUser?.name || "Select a user to chat"}
                 </h3>
             </div>
         </Grid>
@@ -149,7 +148,7 @@ function ChatSection() {
 
                 return (
                   <div key={index} className='self-start text-left mb-2'>
-                    <p className='bg-[#e8e7e7] pr-3 px-2 py-1 text-slate-800 rounded-r-lg rounded-tl-lg max-w-sm text-right'>
+                    <p className='bg-[#e8e7e7] pr-3 px-2 py-1 text-slate-800 rounded-r-lg rounded-tl-lg max-w-sm text-left'>
                       {item.content}
                     </p>
                   </div>

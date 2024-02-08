@@ -66,4 +66,16 @@ const fetchChats = asyncHandler( async(req  ,res) => {
   }
 });
 
-module.exports = {accessChat , fetchChats};
+const deleteChats = asyncHandler(async (req, res) => {
+  try {
+    const chatsToDelete = await Chat.find({ latestMessage: { $exists: false } });
+    
+    await Chat.deleteMany({ _id: { $in: chatsToDelete.map(chat => chat._id) } });
+
+    res.status(200).json({ message: 'Chats without latestMessage deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+module.exports = {accessChat , fetchChats , deleteChats};

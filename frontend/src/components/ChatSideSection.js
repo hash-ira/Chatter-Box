@@ -64,6 +64,23 @@ function ChatSideSection({ fetchAgain }) {
     }
   };
 
+  const handleHomeBtnClick = async () => {
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      };
+  
+      await axios.delete("/api/chat/", config);
+      fetchChats();
+      setHome(true);
+    } catch (error) {
+      toast.error("Error occurred while deleting chats");
+    }
+  }
+  
+
   useEffect(() => {
     fetchChats();
     // eslint-disable-next-line
@@ -97,7 +114,7 @@ function ChatSideSection({ fetchAgain }) {
             onKeyDown={handleSearch}
           />
         </form>
-          <IconButton onClick={() => setHome(true)}>
+          <IconButton onClick={() => handleHomeBtnClick()}>
             <HomeIcon  className={`text-gray-${home ? "200" : "700"}`}/>
           </IconButton>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Grid} from '@mui/material';
 import ChatSection from '../components/ChatSection';
 import ChatSideSection from '../components/ChatSideSection';
@@ -6,13 +6,13 @@ import { ChatState } from '../context/ChatContext';
 
 
 function ChatPage() {
-    const [fetchAgain, setFetchAgain] = useState(false);
     const { user } = ChatState();
+    
     return (
 
-    <Grid container className='md:h-[100vh]'>
-            {user && <ChatSideSection fetchAgain={fetchAgain} /> }
-            {user && <ChatSection />} 
+        <Grid container className='h-[100vh]'>
+            {user && <ChatSideSection /> }
+            {user && <ChatSection/>} 
     </Grid>
     )
 }

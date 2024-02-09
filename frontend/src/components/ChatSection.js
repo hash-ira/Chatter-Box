@@ -1,10 +1,13 @@
 import React, { useEffect  , useRef} from 'react'
-import { Grid, Divider, TextField, IconButton , Avatar } from '@mui/material';
+import { Grid, Divider, TextField, IconButton, Avatar, CircularProgress, Button } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
 import SendIcon from '@mui/icons-material/Send';
 import { ChatState } from '../context/ChatContext';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { io } from "socket.io-client";
+import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const END_POINT = "http://localhost:4000";
 
@@ -13,17 +16,24 @@ var socket , selectedChatCompare;
 
 function ChatSection() {
 
-  const {user , selectedChat , chatUser , setMessageSent} = ChatState();
+  const {user , selectedChat , chatUser , setMessageSent , isChatSelected , setIsChatSelected} = ChatState();
   const [messages , setMessages] = React.useState([]);
   const [newMessage, setNewMessage] = React.useState("");
   const messagesEndRef = useRef(null);
-
+  const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
   // eslint-disable-next-line
-  const [ socketConnected ,setSocketConnected] = React.useState(false);
+  const [socketConnected, setSocketConnected] = React.useState(false);
+  
+  const logoutHandler = () => {
+    sessionStorage.removeItem("userInfo");
+    navigate('/');
+  }
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
     try {
+      setLoading(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -40,6 +50,8 @@ function ChatSection() {
 
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -129,39 +141,57 @@ function ChatSection() {
 
   return (
     <>
-      <Grid item xs={12} lg={9}>
+      <Grid item xs={12} md={8} lg={9} className={` ${ isChatSelected ? '' : 'hidden'} md:block`}>
         
         <Grid container className="px-3 py-2">
-            <div className = 'flex mt-3 pl-3 items-center'> 
+          <div className='flex justify-between w-full items-center'>
+            <div className='flex mt-3 pl-3 items-center'>
+              <div className={` ${ isChatSelected ? '' : 'block'} md:hidden pr-1`}>
+                <IconButton onClick={() => setIsChatSelected(false)}> 
+                  <ArrowBackIcon/>
+                </IconButton>
+                </div>
                 <Avatar alt="Remy Sharp" src={chatUser?.profilePicture} sx={{ width: 48, height: 48 }}/>
                 <h3 className='pl-2 items-left mb-0 text-lg font-bold text-[#7095F2]'>
                     {chatUser?.name || "Select a user to chat"}
                 </h3>
             </div>
+            <div>
+              <Button variant="contained" endIcon={<LogoutIcon />} size="small" onClick={logoutHandler} style={{ backgroundColor: '#6788db', color: '#FFFFFF' }}>
+                Logout
+              </Button>
+            </div>
+            </div>
         </Grid>
         <Divider />
 
         <div className='flex flex-col h-[80vh] overflow-y-auto pt-3 px-5'>
-          {messages?.map((item, index) => {
-            const isSentByCurrentUser = item.sender._id === user._id;
-            return (
-              <div key={index} className={`mb-2 ${isSentByCurrentUser ? 'self-end text-right' : 'self-start text-left'}`}>
-                <p className={`px-2 py-1 max-w-sm text-left ${isSentByCurrentUser ? 'bg-[#4C7CFF] rounded-l-lg rounded-tr-lg text-white' : 'bg-[#e8e7e7] rounded-r-lg rounded-tl-lg text-slate-800'}`}>
-                  {item.content}
-                </p>
-              </div>
-            );
-          })}
+          {loading ? (
+            <div className="flex justify-center my-auto">
+              <CircularProgress color="primary" />
+            </div>
+          ) : (
+            messages?.map((item, index) => {
+              const isSentByCurrentUser = item.sender._id === user._id;
+              return (
+                <div key={index} className={`mb-2 ${isSentByCurrentUser ? 'self-end text-right' : 'self-start text-left'}`}>
+                  <p className={`px-2 py-1 max-w-sm text-left ${isSentByCurrentUser ? 'bg-[#4C7CFF] rounded-l-lg rounded-tr-lg text-white' : 'bg-[#e8e7e7] rounded-r-lg rounded-tl-lg text-slate-800'}`}>
+                    {item.content}
+                  </p>
+                </div>
+              );
+            })
+          )}
           <div ref={messagesEndRef} />
         </div>
 
         {/* Message Input */}
         <div className='mt-auto'>
             <Grid container>
-            <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e);}}}/>
-            <IconButton color="primary" size="large" onClick={sendMessage}>
-                <SendIcon />
-            </IconButton>
+              <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e);}}}/>
+              <IconButton color="primary" size="large" onClick={sendMessage}>
+                  <SendIcon />
+              </IconButton>
 
             </Grid>
         </div>

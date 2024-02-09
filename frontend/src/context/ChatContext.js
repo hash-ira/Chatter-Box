@@ -8,6 +8,7 @@ const ChatProvider = ({children}) => {
     const [chatUser, setChatUser] = useState({});
     const [user , setUser] = useState({});
     const [chats, setChats] = useState([]);
+    const [isChatSelected, setIsChatSelected] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
     const navigate = useNavigate();
 
@@ -23,7 +24,8 @@ const ChatProvider = ({children}) => {
                                             chats , setChats ,
                                             selectedChat, setSelectedChat,
                                             chatUser , setChatUser,
-                                            messageSent , setMessageSent}}>
+                                            messageSent, setMessageSent,
+                                            isChatSelected, setIsChatSelected}}>
         {children}
     </ChatContext.Provider>);
 }

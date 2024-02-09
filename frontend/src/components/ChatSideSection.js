@@ -6,22 +6,18 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import MyChats from './MyChats';
 import HomeIcon from '@mui/icons-material/Home';
-import { IconButton, Button } from '@mui/material';
+import { IconButton} from '@mui/material';
 import SearchedChats from './SearchedChats';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { useNavigate } from 'react-router-dom';
 
-function ChatSideSection({ fetchAgain }) {
-  const { user, setChats, chats, setChatUser } = ChatState();
+
+function ChatSideSection() {
+  const { user, setChats, chats, setChatUser , isChatSelected } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
   const [home, setHome] = React.useState(true);
-  const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    sessionStorage.removeItem("userInfo");
-    navigate('/');
-  }
+
+  
  
 
   const fetchChats = async () => {
@@ -89,7 +85,7 @@ function ChatSideSection({ fetchAgain }) {
   }, [user , home, chats]);
 
   return (
-    <Grid item xs={12} lg={3} className='bg-[#F8F9F8]'>
+    <Grid item xs={12} md={4} lg={3} className={` ${ isChatSelected ? 'hidden' : ''} md:block bg-[#F8F9F8]`}>
       <div elevation={3} className='flex flex-row my-6 px-4 justify-between items-center ml-1'>
         <div className='flex flex-row items-center justify-around'>
           <Avatar alt="Remy Sharp" src={user?.profilePicture} sx={{ width: 64, height: 64 }} />
@@ -97,9 +93,7 @@ function ChatSideSection({ fetchAgain }) {
         </div>
 
         <div>
-          <Button variant="contained" endIcon={<LogoutIcon />} size="small" onClick={logoutHandler} style={{ backgroundColor: '#6788db', color: '#FFFFFF' }}>
-            Logout
-          </Button>
+          
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Grid, Avatar } from '@mui/material';
+import { Grid, Avatar, CircularProgress } from '@mui/material';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import { ChatState } from '../context/ChatContext';
 import toast from 'react-hot-toast';
@@ -11,11 +11,11 @@ import SearchedChats from './SearchedChats';
 
 
 function ChatSideSection() {
-  const { user, setChats, chats, setChatUser , isChatSelected } = ChatState();
+  const { user, setChats, setChatUser , isChatSelected } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
   const [home, setHome] = React.useState(true);
-
+  const [loading, setLoading] = React.useState(false);
 
   
  
@@ -23,6 +23,7 @@ function ChatSideSection() {
   const fetchChats = async () => {
     if (!user) return;
     try {
+      setLoading(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -34,11 +35,14 @@ function ChatSideSection() {
       setChats(data);
     } catch (error) {
       toast.error("Error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
   const getUser = async (searchValue) => {
     try {
+      setLoading(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -49,6 +53,8 @@ function ChatSideSection() {
       setSearchResults(data);
     } catch (error) {
       toast.error("Error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,7 +67,9 @@ function ChatSideSection() {
   };
 
   const handleHomeBtnClick = async () => {
+    if (home) return;
     try {
+      setLoading(true);
       const config = {
         headers: {
           Authorization: `Bearer ${user?.token}`,
@@ -75,6 +83,8 @@ function ChatSideSection() {
       
     } catch (error) {
       toast.error("Error occurred while deleting chats");
+    } finally {
+      setLoading(false);
     }
   }
   
@@ -82,23 +92,19 @@ function ChatSideSection() {
   useEffect(() => {
     fetchChats();
     // eslint-disable-next-line
-  }, [user , home, chats]);
+  }, [user , home]);
 
   return (
-    <Grid item xs={12} md={4} lg={3} className={` ${ isChatSelected ? 'hidden' : ''} md:block bg-[#F8F9F8]`}>
+    <Grid item xs={12} sm={5} md={4} lg={3} className={` ${ isChatSelected ? 'hidden' : ''} sm:block bg-[#F8F9F8]`}>
       <div elevation={3} className='flex flex-row my-6 px-4 justify-between items-center ml-1'>
         <div className='flex flex-row items-center justify-around'>
           <Avatar alt="Remy Sharp" src={user?.profilePicture} sx={{ width: 64, height: 64 }} />
           <h2 className='text-[#7095F2] font-semibold text-lg ml-2'>{user?.name}</h2>
         </div>
-
-        <div>
-          
-        </div>
       </div>
 
-      <div className="flex justify-center">
-        <form className="flex items-center bg-white w-5/6 mx-auto rounded-full px-4 py-0.5 h-9">
+      <div className="flex justify-center px-2">
+        <form className="flex items-center bg-white w-5/6 mx-auto rounded-full pl-4 py-0.5 h-9">
           <div className="mr-2">
             <PersonSearchIcon className="text-gray-400" />
           </div>
@@ -110,15 +116,26 @@ function ChatSideSection() {
             onKeyDown={handleSearch}
           />
         </form>
-          <IconButton onClick={() => handleHomeBtnClick()}>
+          <IconButton onClick={() => handleHomeBtnClick()} className='mr-10'>
             <HomeIcon  className={`text-gray-${home ? "200" : "700"}`}/>
           </IconButton>
       </div>
 
-      { home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Home</p>}
-      { !home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
+      
+      
 
       <div>
+        { loading ? (
+          <div className="flex justify-center my-auto">
+            <CircularProgress color='primary'/>
+          </div>
+        ) : (
+          <div>
+            { home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Home</p>}
+            {!home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
+          </div>
+        )}
+
         {home ? <MyChats/> : <SearchedChats searchResults = {searchResults}/>}
       </div>
     </Grid>

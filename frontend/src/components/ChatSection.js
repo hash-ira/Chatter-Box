@@ -141,12 +141,12 @@ function ChatSection() {
 
   return (
     <>
-      <Grid item xs={12} md={8} lg={9} className={` ${ isChatSelected ? '' : 'hidden'} md:block`}>
+      <Grid item xs={12} sm={7} md={8} lg={9} className={` ${ isChatSelected ? '' : 'hidden'} sm:block`}>
         
-        <Grid container className="px-3 py-2">
+        <Grid container className="px-2 py-2">
           <div className='flex justify-between w-full items-center'>
-            <div className='flex mt-3 pl-3 items-center'>
-              <div className={` ${ isChatSelected ? '' : 'block'} md:hidden pr-1`}>
+            <div className='flex mt-3 pl-1 items-center'>
+              <div className={` ${ isChatSelected ? '' : 'block'} sm:hidden`}>
                 <IconButton onClick={() => setIsChatSelected(false)}> 
                   <ArrowBackIcon/>
                 </IconButton>
@@ -186,9 +186,9 @@ function ChatSection() {
         </div>
 
         {/* Message Input */}
-        <div className='mt-auto'>
+        <div className='mt-auto px-3'>
             <Grid container>
-              <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e);}}}/>
+              <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e) }}}/>
               <IconButton color="primary" size="large" onClick={sendMessage}>
                   <SendIcon />
               </IconButton>

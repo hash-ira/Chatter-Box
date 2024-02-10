@@ -13,10 +13,8 @@ The application has token-based authentication. Real-time chatting is done with 
 **Server:** Node, Express, Socket.io, MongoDB
 
 
-## Further improvements ongoing
+## Demo Link
 
-Group chat feature
-
-Notifications about received messages
+### [Link](https://chatterbox-lnkt.onrender.com)
 
 

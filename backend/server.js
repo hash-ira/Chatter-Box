@@ -1,12 +1,12 @@
 const express = require('express')
 const path = require('path')
 const dotenv = require('dotenv')
-const { chats } = require('./../data.js')
 const app = express();
 const connectDB = require('./config/mongoDB.js');
 const userRoutes = require("./routes/userRoutes.js");
 const chatRoutes = require("./routes/chatRoutes.js");
 const messageRoutes = require("./routes/messageRoutes.js");
+var cors = require('cors')
 
 dotenv.config({path:__dirname+'/../.env'});
 connectDB();
@@ -16,6 +16,14 @@ app.use(express.json()); //for accepting JSON data
 app.use("/api/user" , userRoutes);
 app.use("/api/chat" , chatRoutes);
 app.use("/api/message", messageRoutes);
+
+const corsOptions ={
+  origin:['http://localhost:3000', 'https://chatterbox-lnkt.onrender.com'],
+  credentials:true,            
+  optionSuccessStatus:200
+};
+
+app.use(cors(corsOptions));
 
 
 // -----Deployment----------------
@@ -45,7 +53,7 @@ const server = app.listen( PORT , () => {
 const io = require("socket.io")(server, {
     pingTimeout: 60000,
     cors: {
-      origin: "http://localhost:3000",
+      origin: ['http://localhost:3000', 'https://chatterbox-lnkt.onrender.com'],
     },
   });
 

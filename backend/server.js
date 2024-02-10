@@ -18,7 +18,7 @@ app.use("/api/chat" , chatRoutes);
 app.use("/api/message", messageRoutes);
 
 
-// -----Deployement----------------
+// -----Deployment----------------
 
 const __dirname1 = path.resolve();
 
@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "production") {
 
 // ----------------------------------
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 const server = app.listen( PORT , () => {
     console.log(`Listening on port ${PORT}`);

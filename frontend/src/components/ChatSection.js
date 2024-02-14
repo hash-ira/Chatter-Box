@@ -17,7 +17,7 @@ var socket , selectedChatCompare;
 
 function ChatSection() {
 
-  const { user, selectedChat, chatUser, setMessageSent, isChatSelected, setIsChatSelected } = ChatState();
+  const { user, selectedChat, chatUser, setMessageSent, isChatSelected, setIsChatSelected , setSelectedChat, setChatUser , setUser , setChats } = ChatState();
   const [lastDate, setLastDate] = React.useState(null);
   const [messages , setMessages] = React.useState([]);
   const [newMessage, setNewMessage] = React.useState("");
@@ -29,6 +29,12 @@ function ChatSection() {
   
   const logoutHandler = () => {
     sessionStorage.removeItem("userInfo");
+    setSelectedChat("");
+    setChatUser({});
+    setUser({});
+    setChats([]);
+    setIsChatSelected(false);
+    setMessageSent(false);
     navigate('/');
   }
 

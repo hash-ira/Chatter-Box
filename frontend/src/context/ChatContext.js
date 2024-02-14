@@ -10,6 +10,7 @@ const ChatProvider = ({children}) => {
     const [chats, setChats] = useState([]);
     const [isChatSelected, setIsChatSelected] = useState(false);
     const [messageSent, setMessageSent] = useState(false);
+    const [myChatsRender, setMyChatsRender] = useState(false);
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -25,7 +26,8 @@ const ChatProvider = ({children}) => {
                                             selectedChat, setSelectedChat,
                                             chatUser , setChatUser,
                                             messageSent, setMessageSent,
-                                            isChatSelected, setIsChatSelected}}>
+                                            isChatSelected, setIsChatSelected,
+                                            myChatsRender , setMyChatsRender}}>
         {children}
     </ChatContext.Provider>);
 }

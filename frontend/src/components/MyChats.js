@@ -4,7 +4,7 @@ import { ChatState } from '../context/ChatContext';
 
 function MyChats() {
   
-  const {setSelectedChat , user , setChatUser , chats , setIsChatSelected} = ChatState();
+  const {setSelectedChat , user , setChatUser , chats , setIsChatSelected , myChatsRender} = ChatState();
 
   const handleSelectedChat = (item) => {
     
@@ -32,6 +32,12 @@ function MyChats() {
     }
   };
 
+  React.useEffect(() => {
+    // This effect will re-run whenever the `chats` state changes
+    console.log(myChatsRender);
+  }, [myChatsRender]);
+
+  console.log(chats);
   return (
     <>
       <List>

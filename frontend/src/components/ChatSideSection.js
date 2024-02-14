@@ -11,7 +11,7 @@ import SearchedChats from './SearchedChats';
 
 
 function ChatSideSection() {
-  const { user, setChats, setChatUser , isChatSelected } = ChatState();
+  const { user, setChats, setChatUser , isChatSelected , myChatsRender } = ChatState();
   const [searchValue, setSearchValue] = React.useState("");
   const [searchResults, setSearchResults] = React.useState([]);
   const [home, setHome] = React.useState(true);
@@ -90,8 +90,9 @@ function ChatSideSection() {
 
   useEffect(() => {
     fetchChats();
+    setLoading(false);
     // eslint-disable-next-line
-  }, [user , home]);
+  }, [user , home, myChatsRender]);
 
   return (
     <Grid item xs={12} sm={5} md={4} lg={3} className={` ${ isChatSelected ? 'hidden' : ''} sm:block bg-[#F8F9F8]`}>

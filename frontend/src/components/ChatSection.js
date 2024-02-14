@@ -17,7 +17,7 @@ var socket , selectedChatCompare;
 
 function ChatSection() {
 
-  const { user, selectedChat, chatUser, setMessageSent, isChatSelected, setIsChatSelected , setSelectedChat, setChatUser , setUser , setChats } = ChatState();
+  const { user, selectedChat, chatUser, setMessageSent, isChatSelected, setIsChatSelected , setSelectedChat, setChatUser , setUser , setChats , setMyChatsRender } = ChatState();
   const [lastDate, setLastDate] = React.useState(null);
   const [messages , setMessages] = React.useState([]);
   const [newMessage, setNewMessage] = React.useState("");
@@ -111,6 +111,7 @@ function ChatSection() {
           await addUserToMyChats();
         }
         setMessageSent(true);
+        setMyChatsRender( prev => !prev);
         setMessages(prevMessages => [...prevMessages, data]);
       } catch (error) {
         toast.error("Error ocurred!");

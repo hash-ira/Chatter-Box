@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { io } from "socket.io-client";
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import DateSeparator from './DateSeparator';
 
 const END_POINT = "http://localhost:4000";
 
@@ -16,7 +17,8 @@ var socket , selectedChatCompare;
 
 function ChatSection() {
 
-  const {user , selectedChat , chatUser , setMessageSent , isChatSelected , setIsChatSelected} = ChatState();
+  const { user, selectedChat, chatUser, setMessageSent, isChatSelected, setIsChatSelected } = ChatState();
+  const [lastDate, setLastDate] = React.useState(null);
   const [messages , setMessages] = React.useState([]);
   const [newMessage, setNewMessage] = React.useState("");
   const messagesEndRef = useRef(null);
@@ -139,6 +141,14 @@ function ChatSection() {
     }
   }, [messages]);
 
+  
+  useEffect(() => {
+    if (messages.length > 0) {
+        const lastMessageDate = new Date(messages[messages.length - 1].createdAt);
+        setLastDate(lastMessageDate);
+    }
+  }, [messages]);
+
   return (
     <>
       <Grid item xs={12} sm={7} md={8} lg={9} className={` ${ isChatSelected ? '' : 'hidden'} sm:block`}>
@@ -173,12 +183,20 @@ function ChatSection() {
           ) : (
             messages?.map((item, index) => {
               const isSentByCurrentUser = item.sender._id === user._id;
+              const messageDate = new Date(item.createdAt);
+              const isFirstMessage = index === 0 || messageDate.toDateString() !== new Date(messages[index - 1].createdAt).toDateString();
+
+
               return (
-                <div key={index} className={`mb-2 ${isSentByCurrentUser ? 'self-end text-right' : 'self-start text-left'}`}>
-                  <p className={`px-2 py-1 max-w-sm text-left ${isSentByCurrentUser ? 'bg-[#4C7CFF] rounded-l-lg rounded-tr-lg text-white' : 'bg-[#e8e7e7] rounded-r-lg rounded-tl-lg text-slate-800'}`}>
-                    {item.content}
-                  </p>
-                </div>
+                <React.Fragment key={index}>
+                  {isFirstMessage && <DateSeparator messageDate={messageDate} />}
+                  <div key={index} className={`mb-2 ${isSentByCurrentUser ? 'self-end text-right bg-[#4C7CFF] rounded-l-lg rounded-tr-lg ' : 'self-start text-left bg-[#e8e7e7] rounded-r-lg rounded-tl-lg '}`}>
+                    <p className={`px-2 pt-1 max-w-sm text-left ${isSentByCurrentUser ? 'text-white' : 'text-slate-800'}`}>
+                      {item.content}
+                    </p>
+                    <p className={`${isSentByCurrentUser ? 'text-slate-300' : 'text-slate-800' } text-[9px]  text-right pb-0.5 pr-0.5`} >{messageDate.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit' , hour12: false})}</p>
+                  </div>
+                </React.Fragment>
               );
             })
           )}

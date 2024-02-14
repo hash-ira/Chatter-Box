@@ -7,7 +7,7 @@ function MyChats() {
   const {setSelectedChat , user , setChatUser , chats , setIsChatSelected} = ChatState();
 
   const handleSelectedChat = (item) => {
-    console.log(item);
+    
     setSelectedChat(item._id);
     if(user?._id === item?.users[0]._id){
       setChatUser(item?.users[1]);

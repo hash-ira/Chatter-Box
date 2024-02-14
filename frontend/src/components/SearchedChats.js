@@ -47,7 +47,6 @@ function SearchedChats({ searchResults }) {
     if (!chatId) {
       chatId = await addUserToMyChats(item._id);
     }
-    console.log("chatID", chatId);
     setSelectedChat(chatId);
     setChatUser(item);
   };

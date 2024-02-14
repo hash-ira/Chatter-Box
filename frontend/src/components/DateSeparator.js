@@ -12,7 +12,6 @@ const DateSeparator = React.memo(({ messageDate }) => {
         dateText = "YesterDay";
     }
 
-    console.log(dateText);
   return ( 
     <div className="text-center my-2 text-slate-400 text-xs">
           {dateText}

@@ -31,7 +31,6 @@ function ChatSideSection() {
       };
 
       const { data } = await axios.get("/api/chat", config);
-      console.log(data);
       setChats(data);
     } catch (error) {
       toast.error("Error occurred");

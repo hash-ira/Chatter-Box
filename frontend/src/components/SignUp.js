@@ -94,7 +94,6 @@ function SignUp({toggleSignIn}) {
       axios.post("https://api.cloudinary.com/v1_1/kingsman2702/image/upload", data)
         .then((response) => {
           setProfilePicture(response.data.url.toString());
-          console.log(response.data.url.toString());
         })
         .catch((error) => {
           console.log("Cloudinary error:", error);

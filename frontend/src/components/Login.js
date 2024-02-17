@@ -50,17 +50,23 @@ function Login({toggleSignIn}) {
     }
   };
 
-  const handleGuestUser = (e) =>{
+  const handleGuestUser1 = (e) =>{
     e.preventDefault();
     setEmail("guest@chatter.com");
     setPassword("guest123");
+  }
+
+  const handleGuestUser2 = (e) =>{
+    e.preventDefault();
+    setEmail("guest2@chatter.com");
+    setPassword("qwerty");
   }
 
   return (
     <>
       <div><Toaster/></div>
     <Grid container direction="row" justifyContent="center" alignItems="center">
-        <Paper elevation={4} className="pb-10 p-4 w-72 m-5 rounder-lg">
+        <Paper elevation={4} className="pb-10 p-4 m-5 rounder-lg w-80">
           <Grid align="center" className="mb-4">
             <Avatar style={{ backgroundColor: '#3F51B5', marginBottom: '10px' }}>
               <LockOpenTwoToneIcon />
@@ -91,8 +97,14 @@ function Login({toggleSignIn}) {
               </Grid>
 
               <Grid item xs={12}>
-                <Button type="submit" variant="contained" color="error" fullWidth onClick={handleGuestUser}>
-                  Get Guest User Credentials
+                <Button type="submit" variant="contained" color="error" fullWidth onClick={handleGuestUser1}>
+                  Get 1st Guest User Credentials
+                </Button>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="error" fullWidth onClick={handleGuestUser2}>
+                  Get 2nd Guest User Credentials
                 </Button>
               </Grid>
 

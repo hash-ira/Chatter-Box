@@ -125,18 +125,21 @@ function ChatSideSection() {
       
 
       <div>
+        <div>
+            { home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Home</p>}
+            {!home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
+        </div>
+        
         { loading ? (
-          <div className="flex justify-center my-auto">
+          <div className="flex justify-center mt-14">
             <CircularProgress color='primary'/>
           </div>
         ) : (
-          <div>
-            { home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Home</p>}
-            {!home && <p className="pl-4 pt-2 text-gray-500 font-bold text-sm">Search Results</p>}
-          </div>
+            <>
+              {home ? <MyChats/> : <SearchedChats searchResults = {searchResults}/>}
+            </>
         )}
 
-        {home ? <MyChats/> : <SearchedChats searchResults = {searchResults}/>}
       </div>
     </Grid>
   );

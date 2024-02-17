@@ -9,6 +9,8 @@ import { io } from "socket.io-client";
 import { useNavigate } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DateSeparator from './DateSeparator';
+import Lottie from "react-lottie";
+import animationData from "../animation/typing.json";
 
 const END_POINT = "http://localhost:4000";
 
@@ -18,14 +20,26 @@ var socket , selectedChatCompare;
 function ChatSection() {
 
   const { user, selectedChat, chatUser, setMessageSent, isChatSelected, setIsChatSelected , setSelectedChat, setChatUser , setUser , setChats , setMyChatsRender } = ChatState();
+  // eslint-disable-next-line
   const [lastDate, setLastDate] = React.useState(null);
   const [messages , setMessages] = React.useState([]);
   const [newMessage, setNewMessage] = React.useState("");
   const messagesEndRef = useRef(null);
   const [loading, setLoading] = React.useState(false);
-  const navigate = useNavigate();
-  // eslint-disable-next-line
+  const [isTyping, setIsTyping] = React.useState(false);
+  const [typing, setTyping] = React.useState(false);
   const [socketConnected, setSocketConnected] = React.useState(false);
+  const navigate = useNavigate();
+
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
   
   const logoutHandler = () => {
     sessionStorage.removeItem("userInfo");
@@ -88,7 +102,7 @@ function ChatSection() {
 
   const sendMessage = async (event) => {
     if (newMessage) {
-      
+      socket.emit("stop typing", selectedChat);
       try {
         const config = {
           headers: {
@@ -123,6 +137,10 @@ function ChatSection() {
     socket = io(END_POINT);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing" , () => {
+      setIsTyping(true);
+    });
+    socket.on("stop typing", () => setIsTyping(false));
   }, [user]);
 
   useEffect(() => {
@@ -143,10 +161,13 @@ function ChatSection() {
   }, [socket]);
 
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (isTyping || messages.length > 0) {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-  }, [messages]);
+  }, [isTyping, messages]);
+  
 
   
   useEffect(() => {
@@ -156,6 +177,27 @@ function ChatSection() {
     }
   }, [messages]);
 
+  const handleTyping = (e) => {
+    setNewMessage(e.target.value);
+
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat);
+    }
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat);
+        setTyping(false);
+      }
+    }, timerLength);
+  };
+  
   return (
     <>
       <Grid item xs={12} sm={7} md={8} lg={9} className={` ${ isChatSelected ? '' : 'hidden'} sm:block`}>
@@ -207,13 +249,21 @@ function ChatSection() {
               );
             })
           )}
+          { isTyping && <div>
+                  <Lottie
+                    options={defaultOptions}
+                    // height={50}
+                    width={70}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
+                  />
+                </div> }
           <div ref={messagesEndRef} />
         </div>
 
         {/* Message Input */}
         <div className='mt-auto px-3'>
             <Grid container>
-              <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={(e) => setNewMessage(e.target.value)} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e) }}}/>
+              <TextField fullWidth variant="outlined" size="medium" placeholder="Type a message" className='flex-1' value={newMessage} onChange={handleTyping} onKeyDown={(e) => {if (e.key === "Enter") { sendMessage(e) }}}/>
               <IconButton color="primary" size="large" onClick={sendMessage}>
                   <SendIcon />
               </IconButton>

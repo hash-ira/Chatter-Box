@@ -17,4 +17,26 @@ The application has token-based authentication. Real-time chatting is done with 
 
 ### [Link](https://chatterbox-lnkt.onrender.com)
 
+## Local setup
+
+Clone the GitHub repository.
+
+Install the dependencies.
+```sh
+npm install
+```
+
+Run the following command to run the backend
+```sh
+cd backend
+node server.js
+```
+
+Run the following command to run the frontend
+```sh
+cd frontend
+npm install
+npm start
+```
+Note:- environment variables has to be set up accordingly, which includes a mongo URI.
 
